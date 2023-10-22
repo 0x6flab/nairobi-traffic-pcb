@@ -1,0 +1,44 @@
+version: "3"
+
+networks:
+  nairobi-traffic-pcb-base-net:
+    driver: bridge
+
+volumes:
+  nairobi-traffic-pcb-grafana-loki:
+
+services:
+  proxy:
+    image: traefik:v2.10.4
+    container_name: nairobi-traffic-pcb-traefik
+    restart: on-failure
+    depends_on:
+      - device-manager
+    ports:
+      - ${NTP_HTTP_PORT}:${NTP_HTTP_PORT}
+      - ${NTP_HTTPS_PORT}:${NTP_HTTPS_PORT}
+      - ${NTP_MQTT_PORT}:${NTP_MQTT_PORT}
+      - ${NTP_MQTTS_PORT}:${NTP_MQTTS_PORT}
+      - 8080:8080 # dashboard
+    volumes:
+      - ./traefik/traefik.yaml:/etc/traefik/traefik.yaml
+      - ./traefik/dynamic.yaml:/etc/traefik/dynamic.yaml
+    networks:
+      - nairobi-traffic-pcb-base-net
+
+  device-manager:
+    image: ghcr.io/0x6flab/nairobi-traffic-pcb/device-manager:${NTP_RELEASE_TAG}
+    container_name: nairobi-traffic-pcb-device-manager
+    restart: on-failure
+    environment:
+      NTP_DEVICE_MANAGER_LOG_LEVEL: ${NTP_DEVICE_MANAGER_LOG_LEVEL}
+      NTP_DEVICE_MANAGER_DB_URL: ${NTP_DEVICE_MANAGER_DB_URL}
+      NTP_DEVICE_MANAGER_USER_ID: ${NTP_DEVICE_MANAGER_USER_ID}
+      NTP_DEVICE_MANAGER_USER_TOKEN: ${NTP_DEVICE_MANAGER_USER_TOKEN}
+      NTP_DEVICE_MANAGER_HTTP_URL: ${NTP_DEVICE_MANAGER_HTTP_URL}
+      NTP_DEVICE_MANAGER_MQTT_URL: ${NTP_DEVICE_MANAGER_MQTT_URL}
+      NTP_DEVICE_MANAGER_MQTT_TOPIC: ${NTP_DEVICE_MANAGER_MQTT_TOPIC}
+      NTP_DEVICE_MANAGER_SERVER_CERT: ${NTP_DEVICE_MANAGER_SERVER_CERT}
+      NTP_DEVICE_MANAGER_SERVER_KEY: ${NTP_DEVICE_MANAGER_SERVER_KEY}
+    networks:
+      - nairobi-traffic-pcb-base-net

@@ -1,0 +1,74 @@
+http:
+  routers:
+    device-manager:
+      rule: PathPrefix(`/devices`)
+      entrypoints: http
+      service: device-manager
+      middlewares:
+        - compress
+        - retry
+        - realip
+        - headers-middleware
+        - retry-middleware
+
+    health:
+      rule: PathPrefix(`/health`)
+      entrypoints: http
+      service: device-manager
+
+  services:
+    device-manager:
+      loadBalancer:
+        servers:
+          - url: http://device-manager:9000
+
+
+  middlewares:
+    compress:
+      compress: {}
+
+    retry:
+      retry:
+        attempts: 5
+        initialInterval: 100ms
+
+    realip:
+      plugin:
+        realip:
+          retrievers:
+            - header: X-Forwarded-For
+              depth: 1
+          headers:
+            - X-Real-IP
+
+    retry-middleware:
+      retry:
+        attempts: 5
+        initialInterval: 100ms
+
+    headers-middleware:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+
+tcp:
+  routers:
+    device-manager:
+      rule: "HostSNI(`*`)"
+      entrypoints:
+        - mqtt
+        - mqtts
+      service: device-manager
+      middlewares:
+        - inflightconn
+
+  services:
+    device-manager:
+      loadBalancer:
+        servers:
+          - address: device-manager:1883
+
+  middlewares:
+    inflightconn:
+      inFlightConn:
+        amount: 10
