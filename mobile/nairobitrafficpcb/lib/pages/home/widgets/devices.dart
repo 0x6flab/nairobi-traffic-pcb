@@ -56,7 +56,6 @@ class Devices extends StatelessWidget {
                     children: [
                       SvgPicture.asset(
                         'assets/svg/light.svg',
-                        color: device.isActive ? Colors.white : Colors.black,
                         height: 30,
                       ),
                       const SizedBox(
