@@ -24,7 +24,7 @@ jobs:
           channel: "beta"
 
       - name: Enter to the flutter project directory
-        run: cd nairobi-traffic-pcb
+        run: cd mobile/nairobitrafficpcb
 
       - name: Get flutter dependencies
         run: flutter pub get
