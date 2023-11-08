@@ -32,7 +32,7 @@ Nairobi Traffic PCB is a PCB artwork that showcases the Nairobi traffic. It is a
 
 ## How does it work?
 
-The PCB is powered by an Esp32 microcontroller. The Esp32 is programmed using the Arduino. The Esp32 is connected to the WS2812B LEDs via the GPIO pins. The Esp32 has a Bluetooth LE module that is used to control the PCB. The Bluetooth LE module is used to configure the PCB and to control the PCB. The Bluetooth LE module is controlled by a Flutter app. The Flutter app is used to configure the PCB and to control the PCB. Cloud infrastructure is used to control teh PCB if traffic mode is enabled. It fetches traffic data from google maps API and sends it to the PCB via MQTT.
+The PCB is powered by an Esp32 microcontroller. The Esp32 is programmed using the Arduino. The Esp32 is connected to the WS2812B LEDs via the GPIO pins. The Esp32 has a Bluetooth LE module that is used to control the PCB. The Bluetooth LE module is used to configure the PCB and to control the PCB. The Bluetooth LE module is controlled by a Flutter app. The Flutter app is used to configure the PCB and to control the PCB. Cloud infrastructure is used to control the PCB if traffic mode is enabled. It fetches traffic data from google maps API and sends it to the PCB via MQTT.
 
 ## How to use it?
 
